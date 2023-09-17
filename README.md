@@ -1,0 +1,1 @@
+# xbar-plugin-yf-stock-ticker
