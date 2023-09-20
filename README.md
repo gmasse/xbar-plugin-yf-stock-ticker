@@ -9,7 +9,7 @@ Capture rely on [yahooquery](https://yahooquery.dpguthrie.com) package. No API k
 In a terminal:
 ```sh
 cd ~/Library/Application\ Support/xbar/plugins
-curl -O https://raw.githubusercontent.com/gmasse/xbar-plugin-yf-stock-ticker/main/yf_stock_ticker.10m.sh
+curl -o yf_stock_ticker.10m.sh https://raw.githubusercontent.com/gmasse/xbar-plugin-yf-stock-ticker/main/yf_stock_ticker/yf_stock_ticker.sh
 chmod +x yf_stock_ticker.10m.sh
 ```
 
