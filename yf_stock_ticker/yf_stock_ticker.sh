@@ -19,9 +19,11 @@ if [ "${DEBUG}" = true ]; then
     #TODO: increase verbosity for pip and tar
 fi
 
-PLUGIN_NAME="yf_stock_ticker"
 GITHUB_REPO="gmasse/xbar-plugin-yf-stock-ticker"
-PACKAGES=(yahooquery)
+PLUGIN_NAME="yf_stock_ticker"
+
+PYTHON_SCRIPT="${PLUGIN_NAME}.py"
+SHELL_WRAPPER="${PLUGIN_NAME}.sh"
 
 CURRENT_VERSION=$(grep '^# *<xbar.version>' $0 | sed -E 's/.*<xbar.version>([^<]+)<\/xbar.version>.*/\1/')
 INSTALL_TODO=false
@@ -84,7 +86,7 @@ error_exit()
 
 if [ ${INSTALL_TODO} = true ]; then
     curl --silent --location "https://github.com/${GITHUB_REPO}/releases/download/${LATEST_VERSION}/${PLUGIN_NAME}_${LATEST_VERSION}.tgz" | tar zx || error_exit "installation"
-    ln -sf "${PLUGIN_DIR}/${PLUGIN_NAME}.sh" ${PROGNAME} || error_exit "ln -sf ${PLUGIN_DIR}/${PLUGIN_NAME}.sh ${PROGNAME}"
+    ln -sf "${PLUGIN_DIR}/${SHELL_WRAPPER}" ${PROGNAME} || error_exit "ln -sf ${PLUGIN_DIR}/${SHELL_WRAPPER} ${PROGNAME}"
 fi
 
 # install or update dependencies
@@ -96,25 +98,18 @@ fi
 source venv/bin/activate || error_exit "venv activation"
 
 # check installed packages
-INSTALLED_PACKAGES=$(python3 -m pip list)
-FOUND_PACKAGES_NB=0
-for package in "${PACKAGES[@]}"; do
-    if [ $(echo "${INSTALLED_PACKAGES}" | grep -c "${package}") -gt 0 ]; then
-        FOUND_PACKAGES_NB=$(( ${FOUND_PACKAGES_NB} + 1 ))
-    fi
-done
-# check if all the packages are installed, if not reinstall
-if [ ${FOUND_PACKAGES_NB} -ne ${#PACKAGES[@]} ]; then
+if ! python3 -c "import pkg_resources; pkg_resources.require(open('requirements.txt',mode='r'))"; then
+    # requirements unsatisfied, need to reinstall
     INSTALL_TODO=true
 fi
 
 # install packages if needed
 if [ "${INSTALL_TODO}" = true ]; then
     # installation or update required
+    # update pip and install wheel package
     python3 -m pip -q install -U pip wheel || error_exit "pip upgrade"
-    for package in "${PACKAGES[@]}"; do
-        python3 -m pip -q install "${package}" || error_exit "package ${package}"
-    done
+    # install required packages
+    python3 -m pip -q install -r requirements.txt || error_exit "pip install -r requirements.txt"
 fi
 
-exec "${PLUGIN_DIR}/${PLUGIN_NAME}.py"
+exec "${PLUGIN_DIR}/${PYTHON_SCRIPT}"
