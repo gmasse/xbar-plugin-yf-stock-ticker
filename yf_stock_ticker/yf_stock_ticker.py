@@ -2,9 +2,11 @@
 """ xbar plugin
     --Use Yahoo Finance data to monitor stock indices, currencies and cryptocurrencies """
 
+import sys
 import os
 import logging
 
+import requests.exceptions
 from yahooquery import Ticker
 
 
@@ -29,7 +31,13 @@ def get_quotes(symbols):
     """ Get quotes with yahooquery """
 
     quotes = Ticker(symbols)
-    data = quotes.price
+
+    try:
+        data = quotes.price
+    except requests.exceptions.ConnectionError:
+        log.warning("Cannot get data")
+        return None
+
     for symbol in symbols:
         if not isinstance(data[symbol], dict):
             log.warning("Quote not found for symbol: %s", symbol)
@@ -101,6 +109,10 @@ def main():
 
     unique_symbols = SYMBOLS_TICKER + list(set(SYMBOLS_DROPDOWN) - set(SYMBOLS_TICKER))
     quotes = get_quotes(unique_symbols)
+
+    if quotes is None:
+        print("⚠️ connection failed | color=gray")
+        sys.exit(0)
 
     if len(SYMBOLS_TICKER) == 0:
         print("xbar")
