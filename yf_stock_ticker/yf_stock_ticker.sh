@@ -1,6 +1,6 @@
 #!/bin/sh
 # <xbar.title>YF Stock Ticker</xbar.title>
-# <xbar.version>v0.2-beta</xbar.version>
+# <xbar.version>v0.3-beta</xbar.version>
 # <xbar.author>Germain Masse</xbar.author>
 # <xbar.author.github>gmasse</xbar.author.github>
 # <xbar.desc>--Use Yahoo Finance data to monitor stock indices, currencies and cryptocurrencies</xbar.desc>
@@ -25,7 +25,7 @@ PLUGIN_NAME="yf_stock_ticker"
 PYTHON_SCRIPT="${PLUGIN_NAME}.py"
 SHELL_WRAPPER="${PLUGIN_NAME}.sh"
 
-CURRENT_VERSION=$(grep '^# *<xbar.version>' $0 | sed -E 's/.*<xbar.version>([^<]+)<\/xbar.version>.*/\1/')
+CURRENT_VERSION=$(grep '^# *<xbar.version>' "$0" | sed -E 's/.*<xbar.version>([^<]+)<\/xbar.version>.*/\1/')
 INSTALL_TODO=false
 
 get_latest_version()
@@ -33,9 +33,9 @@ get_latest_version()
     LATEST_VERSION=$(curl --silent "https://api.github.com/repos/${GITHUB_REPO}/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
 }
 
-if [ "$1" = '-v' -o "$1" = '--version' ]; then
+if [ "$1" = '-v' ] || [ "$1" = '--version' ]; then
     # print version and exit
-    echo ${CURRENT_VERSION}
+    echo "${CURRENT_VERSION}"
     exit 0
 fi
 
@@ -56,7 +56,7 @@ PLUGIN_DIR="$(dirname "${SELF_PATH}")/${PLUGIN_NAME}"
 if [ ! -d "${PLUGIN_DIR}" ]; then
     # source code directory does not exist, installation required
     get_latest_version
-    if [ -z ${LATEST_VERSION} ]; then
+    if [ -z "${LATEST_VERSION}" ]; then
         >&2 echo "Unable to get the latest version number"
     else
         # force install
@@ -67,10 +67,10 @@ else
     if [ "${VAR_AUTO_UPDATE}" = 'true' ]; then
         # get the latest version (release tag name)
         get_latest_version
-        if [ -z ${LATEST_VERSION} ]; then
+        if [ -z "${LATEST_VERSION}" ]; then
             >&2 echo "Unable to check the latest version"
         else
-            if [ ${LATEST_VERSION} != ${CURRENT_VERSION} ]; then
+            if [ "${LATEST_VERSION}" != "${CURRENT_VERSION}" ]; then
                 # versions mismatch, update is required
                 INSTALL_TODO=true
             fi
@@ -86,7 +86,7 @@ error_exit()
 
 if [ ${INSTALL_TODO} = true ]; then
     curl --silent --location "https://github.com/${GITHUB_REPO}/releases/download/${LATEST_VERSION}/${PLUGIN_NAME}_${LATEST_VERSION}.tgz" | tar zx || error_exit "installation"
-    ln -sf "${PLUGIN_DIR}/${SHELL_WRAPPER}" ${PROGNAME} || error_exit "ln -sf ${PLUGIN_DIR}/${SHELL_WRAPPER} ${PROGNAME}"
+    ln -sf "${PLUGIN_DIR}/${SHELL_WRAPPER}" "${PROGNAME}" || error_exit "ln -sf ${PLUGIN_DIR}/${SHELL_WRAPPER} ${PROGNAME}"
 fi
 
 # install or update dependencies
@@ -95,7 +95,8 @@ if [ ! -d "venv" ]; then
     python3 -m venv venv || error_exit "venv creation"
     INSTALL_TODO=true
 fi
-source venv/bin/activate || error_exit "venv activation"
+# shellcheck disable=SC1091
+. venv/bin/activate || error_exit "venv activation"
 
 # check installed packages
 if ! python3 -c "import pkg_resources; pkg_resources.require(open('requirements.txt',mode='r'))"; then
