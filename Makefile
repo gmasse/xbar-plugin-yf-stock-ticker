@@ -33,7 +33,7 @@ lint: venv $(SUBDIR)/*.sh $(SUBDIR)/*.py
 	$(SHELLCHECK) $(SUBDIR)/*.sh
 	$(PYTHON) -m pylint $(SUBDIR)/*.py
 
-test: venv $(SUBDIR)/*.py
+test: venv $(SUBDIR)/*.py tests/*.py
 	$(PYTHON) -m pytest -v -x
 
 all: lint test

@@ -1,7 +1,9 @@
+import os
 import sys
 import yahooquery
 import yf_stock_ticker.yf_stock_ticker as yf_stock_ticker
 
+os.environ['TZ'] = 'UTC' # set default timezone
 
 sample_quote_data = {'AAPL': {'averageDailyVolume10Day': {},
                               'averageDailyVolume3Month': {},
@@ -22,7 +24,7 @@ sample_quote_data = {'AAPL': {'averageDailyVolume10Day': {},
                               'postMarketChangePercent': 0.00091540517,
                               'postMarketPrice': 174.95,
                               'postMarketSource': 'DELAYED',
-                              'postMarketTime': '2023-09-22 19:59:53',
+                              'postMarketTime': '2023-09-22 23:59:53',
                               'preMarketChange': {},
                               'preMarketPrice': {},
                               'preMarketSource': 'FREE_REALTIME',
@@ -37,7 +39,7 @@ sample_quote_data = {'AAPL': {'averageDailyVolume10Day': {},
                               'regularMarketPreviousClose': 173.93,
                               'regularMarketPrice': 174.79,
                               'regularMarketSource': 'FREE_REALTIME',
-                              'regularMarketTime': '2023-09-22 16:00:02',
+                              'regularMarketTime': '2023-09-22 20:00:02',
                               'regularMarketVolume': 55110610,
                               'shortName': 'Apple Inc.',
                               'strikePrice': {},
