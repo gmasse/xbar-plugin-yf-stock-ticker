@@ -1,6 +1,9 @@
 name: Plugin
 
-on: [push]
+on:
+  pull_request:
+    branches:
+      - 'main'
 
 jobs:
   build:
@@ -8,9 +11,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ["macos-13", "macos-12", "macos-11"]
-        python-version: ["3.8", "3.9", "3.10"]
-        
+        os: [macos-13, macos-12, macos-11]
+        include:
+          - os: macos-13
+            python-version: 3.9
+          - os: macos-12
+            python-version: 3.8
+          - os: macos-11
+            python-version: 3.8
+
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
