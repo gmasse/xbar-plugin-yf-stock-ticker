@@ -45,7 +45,7 @@ def get_quotes(symbols):
     return data
 
 
-def print_ticker(symbol_data):
+def gen_ticker(symbol_data):
     """ Display a quote on the navbar """
 
     symbol = ''
@@ -68,14 +68,15 @@ def print_ticker(symbol_data):
         suffix = ' | color=red'
     else:
         prefix = '= '
-    print(f"{prefix}{symbol} {symbol_data['regularMarketChangePercent']:.2%}{suffix}")
+    return f"{prefix}{symbol} {symbol_data['regularMarketChangePercent']:.2%}{suffix}\n"
 
 
-def print_dropdown(symbol_data):
+def gen_dropdown(symbol_data):
     """ Display a quote in the dropdown """
 
     FONT = " | font='Menlo'" # pylint: disable=invalid-name
 
+    output = ''
     symbol = ''
     if symbol_data['quoteType'] == 'CURRENCY':
         symbol = symbol_data['shortName']
@@ -95,14 +96,14 @@ def print_dropdown(symbol_data):
         suffix = '🟰'
     formated_change = f"{symbol_data['regularMarketChangePercent']:+.2%}"
     regular_market_price = f"{symbol_data['regularMarketPrice']:.2f}"
-    print(f"{symbol:<7} {regular_market_price:>10} {formated_change:>10} {suffix}" + FONT)
 
-    print(f"--{symbol_data['longName']} ({symbol_data['currency']})" + FONT)
-    print(f"--Previous Close: {symbol_data['regularMarketPreviousClose']:.2f}" + FONT)
-    print(f"--Open:           {symbol_data['regularMarketOpen']:.2f}" + FONT)
-    print(f"--Day's Range:    {symbol_data['regularMarketDayLow']:.2f}"
-          + f" - {symbol_data['regularMarketDayHigh']:.2f}" + FONT)
-
+    output += f"{symbol:<7} {regular_market_price:>10} {formated_change:>10} {suffix}" + FONT + "\n"
+    output += f"--{symbol_data['longName']} ({symbol_data['currency']})" + FONT + "\n"
+    output += f"--Previous Close: {symbol_data['regularMarketPreviousClose']:.2f}" + FONT + "\n"
+    output += f"--Open:           {symbol_data['regularMarketOpen']:.2f}" + FONT + "\n"
+    output += f"--Day's Range:    {symbol_data['regularMarketDayLow']:.2f}" \
+           + f" - {symbol_data['regularMarketDayHigh']:.2f}" + FONT + "\n"
+    return output
 
 def main():
     """ Main function """
@@ -120,14 +121,14 @@ def main():
         for symbol in SYMBOLS_TICKER:
             if symbol in quotes:
                 data = quotes[symbol]
-                print_ticker(data)
+                print(gen_ticker(data), end='')
 
     print("---")
 
     for symbol in SYMBOLS_DROPDOWN:
         if symbol in quotes:
             data = quotes[symbol]
-            print_dropdown(data)
+            print(gen_dropdown(data), end='')
 
 
 if __name__ == '__main__':

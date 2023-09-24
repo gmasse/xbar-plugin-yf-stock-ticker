@@ -5,16 +5,18 @@ SUBDIR := $(PLUGIN_NAME)
 PYTHON := venv/bin/python3
 SHELLCHECK := venv/bin/shellcheck
 
-.PHONY: clean help
+.PHONY: help
 
 .DEFAULT: help
 help:
 	@echo "make all"
-	@echo "       prepare development environment, lint and build"
+	@echo "       prepare development environment, lint and test"
 	@echo "make venv"
 	@echo "       prepare development environment"
 	@echo "make lint"
-	@echo "       run pylint"
+	@echo "       run linting"
+	@echo "make test"
+	@echo "       run tests"
 	@echo "make build"
 	@echo "       build release"
 	@echo "make clean"
@@ -31,13 +33,19 @@ lint: venv $(SUBDIR)/*.sh $(SUBDIR)/*.py
 	$(SHELLCHECK) $(SUBDIR)/*.sh
 	$(PYTHON) -m pylint $(SUBDIR)/*.py
 
-build: $(SUBDIR)/*.*
+test: venv $(SUBDIR)/*.py tests/*.py
+	$(PYTHON) -m pytest -v -x
+
+all: lint test
+
+clean_bytecode: venv
+	$(PYTHON) -m pyclean . --debris
+
+build: clean_bytecode $(SUBDIR)/*.*
 	RELEASE=$$($(SUBDIR)/$(PLUGIN_NAME).sh --version) ;\
 	tar --uid=0 --gid=0 -zcvf $(PLUGIN_NAME)_$${RELEASE}.tgz $(SUBDIR)
 
-all: lint build
-
-clean:
+clean: clean_bytecode
 	rm -rf venv
 	rm -f $(PLUGIN_NAME)_*.tgz
 
