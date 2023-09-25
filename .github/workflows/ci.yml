@@ -1,13 +1,19 @@
-name: Development
+name: CI
 
 on:
-  push:
-    branches-ignore:
+  pull_request:
+    branches:
       - main
+  workflow_dispatch:
+  workflow_call:
 
 jobs:
   test:
-    runs-on: macos-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-13, macos-12, macos-11]
+
     steps:
     - uses: actions/checkout@v4
     - name: Install dependencies

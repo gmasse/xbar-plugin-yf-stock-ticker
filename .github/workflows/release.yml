@@ -1,0 +1,42 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency: build-${{ github.ref }}
+
+jobs:
+  test:
+    name: Lint and test
+    uses: gmasse/xbar-plugin-yf-stock-ticker/.github/workflows/ci.yml@main
+
+  build:
+    runs-on: macos-latest
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Get version
+      id: get-version
+      run: echo "::set-output name=version::$(./yf_stock_ticker/yf_stock_ticker.sh --version)"
+    - name: Build
+      run: |
+        make build
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        path: yf_stock_ticker_${{ steps.get-version.outputs.version }}.tgz
+    - name: Create release
+      uses: ncipollo/release-action@v1
+      with:
+        tag: ${{ steps.get-version.outputs.version }}
+        commit: ${{ github.sha }}
+        skipIfReleaseExists: true
+        draft: true
+        prerelease: false
+        generateReleaseNotes: true
+        makeLatest: false
+        artifacts: yf_stock_ticker_${{ steps.get-version.outputs.version }}.tgz
