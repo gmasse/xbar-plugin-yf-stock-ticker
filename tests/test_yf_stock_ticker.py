@@ -1,6 +1,6 @@
 import os
 import sys
-import yahooquery
+from yahooquery import Ticker
 import yf_stock_ticker.yf_stock_ticker as yf_stock_ticker
 
 os.environ['TZ'] = 'UTC' # set default timezone
@@ -49,20 +49,14 @@ sample_quote_data = {'AAPL': {'averageDailyVolume10Day': {},
                               'volume24Hr': {},
                               'volumeAllCurrencies': {}}}
 
-class MockTicker:
-    @property
-    def price(self):
+
+def test_get_quotes(monkeypatch):
+    def mock_quote_summary(*args, **kwargs):
         output = sample_quote_data
         output['UNKNOW'] = 'Quote not found for ticker symbol: UNKNOWN'
         return output;
 
-
-
-def test_get_quotes(monkeypatch):
-    def mock_ticker(*args, **kwargs):
-        return MockTicker()
-
-    monkeypatch.setattr(yahooquery, "Ticker", MockTicker)
+    monkeypatch.setattr(Ticker, "_quote_summary", mock_quote_summary)
     assert yf_stock_ticker.get_quotes(['AAPL']) == sample_quote_data
 
 
@@ -78,4 +72,3 @@ def test_gen_drodpdown(capsys):
 --Open:           174.67 | font='Menlo'
 --Day's Range:    174.06 - 177.08 | font='Menlo'
 """
-
