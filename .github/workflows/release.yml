@@ -8,11 +8,32 @@ on:
 concurrency: build-${{ github.ref }}
 
 jobs:
+  check-files-changed:
+    runs-on: ubuntu-latest
+    outputs:
+      any_modified: ${{ steps.changed-files.outputs.any_modified }}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+    - uses: tj-actions/changed-files@v39
+      id: changed-files
+      with:
+        files: yf_stock_ticker/**
+    - name: List all modified files
+      run: |
+        for file in ${{ steps.changed-files.outputs.all_modified_files }}; do
+          echo "$file was changed"
+        done
+
   test:
+    needs: check-files-changed
+    if: needs.check-files-changed.outputs.any_modified == 'true'
     name: Lint and test
     uses: gmasse/xbar-plugin-yf-stock-ticker/.github/workflows/ci.yml@main
 
   build:
+    needs: test
     runs-on: macos-latest
     permissions:
       contents: write

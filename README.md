@@ -1,4 +1,6 @@
 # xbar-plugin-yf-stock-ticker
+![CI workflow](https://github.com/gmasse/xbar-plugin-yf-stock-ticker/actions/workflows/ci.yml/badge.svg)
+[![GitHub Release](https://img.shields.io/github/release/gmasse/xbar-plugin-yf-stock-ticker.svg?style=flat)](https://github.com/gmasse/xbar-plugin-yf-stock-ticker/releases)
 
 A (yet another) [xbar](https://xbarapp.com) plugin that display stock quotes, global indices, currencies and cryptocurrencies.
 It does not require any account creation or API key. Data collection is made reliable thanks to [yahooquery](https://yahooquery.dpguthrie.com) package.
