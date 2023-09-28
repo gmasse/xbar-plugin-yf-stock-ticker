@@ -7,6 +7,17 @@ It does not require any account creation or API key. Data collection is made rel
 
 The plugin accepts all the symbols supported by Yahoo! Finance.
 
+## Features
+- Market changes (%) will cycle in the navigation bar
+- Market prices details will appear in the dropdown menu (symbols may be different from those in the navigation bar)
+- Any Yahoo! Finance ticker symbol is supported:
+  - stock (ex. `AAPL`)
+  - index (ex. `^IXIC`)
+  - FX rate (ex. `EURUSD=X`)
+  - Cryptocurrency (ex. `BTC-USD`)
+- Plugin automatic update (for ex. in case of YF breaking change, a plugin update will trigger the yahooquery package update)
+- Configuration (symbols, auto-update) via plugin preferences panel
+
 ## Manual installation
 In a terminal:
 ```sh
