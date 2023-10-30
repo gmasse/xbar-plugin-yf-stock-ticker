@@ -23,7 +23,10 @@ if os.environ.get('VAR_DROPDOWN_SYMBOLS') is not None:
 # Enable debug
 FORMAT = ('%(asctime)-15s %(threadName)-15s '
           '%(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
-logging.basicConfig(format=FORMAT, level=logging.WARNING)
+if os.environ.get('DEBUG') == 'true':
+    logging.basicConfig(format=FORMAT, level=logging.DEBUG)
+else:
+    logging.basicConfig(format=FORMAT, level=logging.WARNING)
 log = logging.getLogger()
 
 
@@ -38,10 +41,13 @@ def get_quotes(symbols):
         log.warning("Cannot get data")
         return None
 
-    for symbol in symbols:
-        if not isinstance(data[symbol], dict):
-            log.warning("Quote not found for symbol: %s", symbol)
-            del data[symbol]
+    if 'error' in data:
+        log.warning("Yahooquery failure: %s", data['error'])
+    else:
+        for symbol in symbols:
+            if not isinstance(data[symbol], dict):
+                log.warning("Quote not found for symbol: %s", symbol)
+                del data[symbol]
     return data
 
 
