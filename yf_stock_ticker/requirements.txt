@@ -1,1 +1,1 @@
-yahooquery >= 2.3.3
+yahooquery >= 2.3.7

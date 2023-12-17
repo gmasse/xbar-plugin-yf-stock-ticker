@@ -1,6 +1,6 @@
 #!/bin/sh
 # <xbar.title>YF Stock Ticker</xbar.title>
-# <xbar.version>v0.4.2-beta</xbar.version>
+# <xbar.version>v0.4.3-beta</xbar.version>
 # <xbar.author>Germain Masse</xbar.author>
 # <xbar.author.github>gmasse</xbar.author.github>
 # <xbar.desc>--Use Yahoo Finance data to monitor stock indices, currencies and cryptocurrencies</xbar.desc>
