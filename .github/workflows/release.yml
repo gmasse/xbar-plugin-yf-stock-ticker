@@ -42,7 +42,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Get version
       id: get-version
-      run: echo "::set-output name=version::$(./yf_stock_ticker/yf_stock_ticker.sh --version)"
+      run: echo "version=$(./yf_stock_ticker/yf_stock_ticker.sh --version)" >> $GITHUB_OUTPUT
     - name: Build
       run: |
         make build
