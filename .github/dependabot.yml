@@ -1,0 +1,6 @@
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/yf_stock_ticker"
+    schedule:
+      interval: "daily"
