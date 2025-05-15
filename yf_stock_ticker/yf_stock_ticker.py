@@ -33,9 +33,8 @@ log = logging.getLogger()
 def get_quotes(symbols):
     """ Get quotes with yahooquery """
 
-    quotes = Ticker(symbols)
-
     try:
+        quotes = Ticker(symbols)
         data = quotes.price
     except requests.exceptions.ConnectionError:
         log.warning("Cannot get data")

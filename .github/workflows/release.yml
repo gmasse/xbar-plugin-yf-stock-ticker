@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 2
-    - uses: tj-actions/changed-files@v39
+    - uses: tj-actions/changed-files@ed68ef82c095e0d48ec87eccea555d944a631a4c
       id: changed-files
       with:
         files: yf_stock_ticker/**
@@ -42,7 +42,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Get version
       id: get-version
-      run: echo "::set-output name=version::$(./yf_stock_ticker/yf_stock_ticker.sh --version)"
+      run: echo "version=$(./yf_stock_ticker/yf_stock_ticker.sh --version)" >> $GITHUB_OUTPUT
     - name: Build
       run: |
         make build
