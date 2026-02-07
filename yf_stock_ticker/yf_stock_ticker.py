@@ -10,14 +10,14 @@ import requests.exceptions
 from yahooquery import Ticker
 
 
-SYMBOLS_TICKER = []
-SYMBOLS_DROPDOWN = []
 # user defined list of stock to display (in the navbar or in the dropdown)
 # space delimited environment variables are converted to list (removing empty elements)
-if os.environ.get('VAR_TICKER_SYMBOLS') is not None:
-    SYMBOLS_TICKER = list(filter(None, os.environ.get('VAR_TICKER_SYMBOLS').split(' ')))
-if os.environ.get('VAR_DROPDOWN_SYMBOLS') is not None:
-    SYMBOLS_DROPDOWN = list(filter(None, os.environ.get('VAR_DROPDOWN_SYMBOLS').split(' ')))
+SYMBOLS_TICKER = (
+    list(filter(None, os.environ.get('VAR_TICKER_SYMBOLS', '').split(' ')))
+)
+SYMBOLS_DROPDOWN = (
+    list(filter(None, os.environ.get('VAR_DROPDOWN_SYMBOLS', '').split(' ')))
+)
 
 
 # Enable debug
