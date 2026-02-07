@@ -33,6 +33,57 @@ Symbols to display can be configured in the xbar menu `Plugin Browser...`
 
 ![Screenshot of the plugin browser](/assets/screenshot_xbar_plugin_browser.png)
 
+## Development
+
+### Prerequisites
+- Python 3.x
+- Make
+
+### Setting up the development environment
+```sh
+# Create venv and install dependencies
+make venv
+```
+
+### Available commands
+```sh
+make help    # Show all available commands
+make venv    # Prepare development environment
+make lint    # Run linting (shellcheck + pylint)
+make test    # Run tests
+make all     # Lint and test
+make build   # Build release tarball
+make clean   # Remove all development files
+```
+
+### Manual testing
+```sh
+# Run the plugin with sample symbols
+VAR_TICKER_SYMBOLS="AAPL BTC-USD" VAR_DROPDOWN_SYMBOLS="AAPL ^IXIC ETH-BTC" ./yf_stock_ticker/yf_stock_ticker.py
+```
+
+Example output:
+```
+▼ AAPL -0.18% | color=red
+▼ BTC-USD -5.46% | color=red
+---
+AAPL        255.99     -0.18% 🔴 | font='Menlo'
+--Apple Inc. (USD) | font='Menlo'
+--Previous Close: 256.44 | font='Menlo'
+--Open:           258.07 | font='Menlo'
+--Day's Range:    254.41 - 259.65 | font='Menlo'
+^IXIC     23370.76     -2.04% 🔴 | font='Menlo'
+--NASDAQ Composite (USD) | font='Menlo'
+--Previous Close: 23857.45 | font='Menlo'
+--Open:           23830.92 | font='Menlo'
+--Day's Range:    23232.78 - 23840.55 | font='Menlo'
+ETH-BTC       0.03     -6.39% 🔴 | font='Menlo'
+--Ethereum BTC (BTC) | font='Menlo'
+--Previous Close: 0.03 | font='Menlo'
+--Open:           0.03 | font='Menlo'
+--Day's Range:    0.03 - 0.03 | font='Menlo'
+```
+
 ## Disclaimer
 This project is not affiliated with Yahoo, Inc.
 

@@ -10,14 +10,14 @@ import requests.exceptions
 from yahooquery import Ticker
 
 
-SYMBOLS_TICKER = []
-SYMBOLS_DROPDOWN = []
 # user defined list of stock to display (in the navbar or in the dropdown)
 # space delimited environment variables are converted to list (removing empty elements)
-if os.environ.get('VAR_TICKER_SYMBOLS') is not None:
-    SYMBOLS_TICKER = list(filter(None, os.environ.get('VAR_TICKER_SYMBOLS').split(' ')))
-if os.environ.get('VAR_DROPDOWN_SYMBOLS') is not None:
-    SYMBOLS_DROPDOWN = list(filter(None, os.environ.get('VAR_DROPDOWN_SYMBOLS').split(' ')))
+SYMBOLS_TICKER = (
+    list(filter(None, os.environ.get('VAR_TICKER_SYMBOLS', '').split(' ')))
+)
+SYMBOLS_DROPDOWN = (
+    list(filter(None, os.environ.get('VAR_DROPDOWN_SYMBOLS', '').split(' ')))
+)
 
 
 # Enable debug
@@ -47,6 +47,7 @@ def get_quotes(symbols):
             if not isinstance(data[symbol], dict):
                 log.warning("Quote not found for symbol: %s", symbol)
                 del data[symbol]
+
     return data
 
 
@@ -105,10 +106,26 @@ def gen_dropdown(symbol_data):
     output += f"{symbol:<7} {regular_market_price:>10} {formated_change:>10} {suffix}" + FONT + "\n"
     output += f"--{symbol_data['longName']} ({symbol_data['currency']})" + FONT + "\n"
     output += f"--Previous Close: {symbol_data['regularMarketPreviousClose']:.2f}" + FONT + "\n"
+    # After-hours data (available after market closes)
+    post_change = symbol_data.get('postMarketChange')
+    post_change_pct = symbol_data.get('postMarketChangePercent')
+    if post_change is not None and post_change_pct is not None:
+        post_sign = '+' if post_change >= 0 else ''
+        post_fmt = f"{post_sign}{post_change_pct:.2%} ({post_sign}{post_change:.2f})"
+        output += f"--After-hours:    {post_fmt}" + FONT + "\n"
+    # Pre-market data (available before market opens)
+    pre_change = symbol_data.get('preMarketChange')
+    pre_change_pct = symbol_data.get('preMarketChangePercent')
+    if pre_change is not None and pre_change_pct is not None:
+        pre_sign = '+' if pre_change >= 0 else ''
+        output += f"--Pre-market:     {pre_sign}{pre_change_pct:.2%} ({pre_sign}{pre_change:.2f})" \
+               + FONT + "\n"
     output += f"--Open:           {symbol_data['regularMarketOpen']:.2f}" + FONT + "\n"
     output += f"--Day's Range:    {symbol_data['regularMarketDayLow']:.2f}" \
            + f" - {symbol_data['regularMarketDayHigh']:.2f}" + FONT + "\n"
+
     return output
+
 
 def main():
     """ Main function """
