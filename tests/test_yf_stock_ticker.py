@@ -69,6 +69,7 @@ def test_gen_drodpdown(capsys):
 """AAPL        174.79     +0.49% 🌘 | font='Menlo'
 --Apple Inc. (USD) | font='Menlo'
 --Previous Close: 173.93 | font='Menlo'
+--After-hours:    +0.09% (+0.16) | font='Menlo'
 --Open:           174.67 | font='Menlo'
 --Day's Range:    174.06 - 177.08 | font='Menlo'
 """
